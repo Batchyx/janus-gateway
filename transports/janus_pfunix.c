@@ -353,6 +353,8 @@ int janus_pfunix_init(janus_transport_callbacks *callback, const char *config_pa
 	clients_by_fd = g_hash_table_new(NULL, NULL);
 	clients_by_path = g_hash_table_new(g_str_hash, g_str_equal);
 
+	g_atomic_int_set(&initialized, 1);
+
 	/* Start the Unix Sockets service thread */
 	GError *error = NULL;
 	pfunix_thread = g_thread_try_new("pfunix thread", &janus_pfunix_thread, NULL, &error);
@@ -365,7 +367,6 @@ int janus_pfunix_init(janus_transport_callbacks *callback, const char *config_pa
 	}
 
 	/* Done */
-	g_atomic_int_set(&initialized, 1);
 	JANUS_LOG(LOG_INFO, "%s initialized!\n", JANUS_PFUNIX_NAME);
 	return 0;
 }
